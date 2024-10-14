@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.24)
-project(HGameTemplate)
+set(CMAKE_CXX_STANDARD 20)
+project(HGEditor)
 
 set(CMAKE_REQUIRED_LIBRARIES "-L${atomic_lib_dir}" "-latomic")
 
 find_package(PkgConfig REQUIRED)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+MESSAGE("${CMAKE_CURRENT_LIST_DIR}")
+find_package(HaGame2 REQUIRED)
 
 # set(CMAKE_TOOLCHAIN_FILE /home/henry/emsdk/)
 if(EMSCRIPTEN)
@@ -37,6 +42,8 @@ file(GLOB IMGUI_GLOB
         ${IMGUI_PATH}/imstb_truetype.h
         ${IMGUI_PATH}/imgui_tables.cpp
         ${IMGUI_PATH}/imgui_widgets.cpp
+        ${IMGUI_PATH}/misc/cpp/imgui_stdlib.h
+        ${IMGUI_PATH}/misc/cpp/imgui_stdlib.cpp
 
         # specific bindings...
         ${IMGUI_PATH}/backends/imgui_impl_glfw.h
@@ -49,25 +56,35 @@ add_library("imgui" STATIC ${IMGUI_GLOB})
 target_include_directories("imgui" PUBLIC ${IMGUI_PATH})
 target_link_libraries("imgui" PRIVATE glfw)
 
+add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h)
+target_include_directories(hge PUBLIC include/)
+target_include_directories(hge PUBLIC impl/)
+target_include_directories(hge PUBLIC ${HAGAME2_INCLUDE_DIR})
+target_include_directories(hge PUBLIC ${IMGUI_PATH})
+target_include_directories(hge PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/glad/include/)
+
+target_link_libraries(hge ${HAGAME2_LIBRARY})
+target_link_libraries(hge imgui)
+target_link_libraries(hge ${GLFW_LIBRARIES})
+
 include_directories(${X11_INCLUDE_DIR})
 
-set(CMAKE_CXX_STANDARD 20)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-MESSAGE("${CMAKE_CURRENT_LIST_DIR}")
-find_package(HaGame2 REQUIRED)
-
-add_executable(HGameTemplate main.cpp src/constants.h src/game.h src/game.cpp src/scenes/mainMenu.h src/scenes/mainMenu.cpp src/common/actionMap.h src/common/gameState.cpp src/common/persistentSettings.cpp src/common/ui.cpp src/common/enums/debugLevel.h)
-target_include_directories(HGameTemplate PUBLIC ${HAGAME2_INCLUDE_DIR})
-target_include_directories(HGameTemplate PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/asio/asio/include/)
-target_link_libraries(HGameTemplate ${HAGAME2_LIBRARY})
-target_link_libraries(HGameTemplate ${GLFW_LIBRARIES})
-target_link_libraries(HGameTemplate ${OPENGL_LIBRARIES})
-target_include_directories(HGameTemplate PUBLIC ${IMGUI_PATH})
-target_link_libraries(HGameTemplate imgui)
-target_link_libraries(HGameTemplate ${X11_LIBRARIES})
-target_link_libraries(HGameTemplate ${ALSA_LIBRARIES})
+add_executable(HGEditor main.cpp src/constants.h src/game.h src/game.cpp src/scenes/mainMenu.h src/scenes/mainMenu.cpp src/common/actionMap.h src/common/gameState.cpp src/common/persistentSettings.cpp src/common/ui.cpp src/common/enums/debugLevel.h include/hge/core/events.h impl/events.cpp src/scenes/runtime.h src/scenes/runtime.cpp)
+target_include_directories(HGEditor PUBLIC ${HAGAME2_INCLUDE_DIR})
+target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/asio/asio/include/)
+target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/glad/include/)
+target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/assimp/include/)
+target_include_directories(HGEditor PUBLIC ${IMGUI_PATH})
+target_link_libraries(HGEditor ${HAGAME2_LIBRARY})
+target_link_libraries(HGEditor ${GLFW_LIBRARIES})
+target_link_libraries(HGEditor ${OPENGL_LIBRARIES})
+target_link_libraries(HGEditor imgui)
+target_link_libraries(HGEditor ${X11_LIBRARIES})
+target_link_libraries(HGEditor ${ALSA_LIBRARIES})
+target_include_directories(HGEditor PUBLIC include/)
+target_link_libraries(HGEditor hge)
 
 # set(CMAKE_TOOLCHAIN_FILE /home/henry/emsdk/)
 if(EMSCRIPTEN)
-    set_target_properties(HGameTemplate PROPERTIES LINK_FLAGS "-DCMAKE_EXE_LINKER_FLAGS=-s -sMAX_WEBGL_VERSION=2 -sUSE_GLFW=3 -sTOTAL_MEMORY=512MB --preload-file ./../assets -sSTACK_SIZE=1000000")
+    set_target_properties(HGEditor PROPERTIES LINK_FLAGS "-DCMAKE_EXE_LINKER_FLAGS=-s -sMAX_WEBGL_VERSION=2 -sUSE_GLFW=3 -sTOTAL_MEMORY=512MB --preload-file ./../assets -sSTACK_SIZE=1000000")
 endif()

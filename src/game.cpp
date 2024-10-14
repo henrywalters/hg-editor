@@ -16,6 +16,9 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "common/gameState.h"
+#include "scenes/runtime.h"
+
+#include <hge/core/events.h>
 
 #endif
 
@@ -24,15 +27,12 @@ using namespace hg::utils;
 using namespace hg::input::devices;
 
 void Game::onInit() {
+
 #if !HEADLESS
     m_window = Windows::Create(GAME_NAME, GAME_SIZE);
 
     Windows::Events.subscribe(WindowEvents::Close, [&](Window* window) {
-        running(false);
-    });
-
-    Windows::Events.subscribe(WindowEvents::Resize, [&](Window* window) {
-
+        requestShutdown();
     });
 
     auto defaultFont = hg::loadFont("8bit", hg::ASSET_DIR + "fonts/8bit.ttf");
@@ -87,6 +87,7 @@ void Game::onInit() {
 
 #endif
 
+        scenes()->add<Runtime>("runtime", m_window);
         scenes()->add<MainMenu>("main_menu", m_window);
         scenes()->activate("main_menu");
     };
@@ -107,6 +108,8 @@ void Game::onInit() {
 }
 
 void Game::onBeforeUpdate() {
+
+    m_window->setVSync(true);
 
     Profiler::Start(GAME_NAME);
 

@@ -3,6 +3,8 @@
 #include <hagame/core/hg.h>
 #include "src/game.h"
 
+#include <hagame/math/quaternion.h>
+
 // The main function simply initializes the game and starts running it
 
 // The main entrypoint of the game is found in src/game.h
@@ -19,6 +21,11 @@ void emscripten_tick() {
 }
 
 int main() {
+
+    hg::math::Quaternion<float> q(hg::math::PI / 2, hg::Vec3(1, 0, 0));
+
+    std::cout << q.eulerAngles() << "\n";
+
 #ifdef __EMSCRIPTEN__
     game.initialize();
     emscripten_set_main_loop(emscripten_tick, 0, false);

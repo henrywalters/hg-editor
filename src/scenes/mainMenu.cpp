@@ -5,6 +5,7 @@
 #include <hagame/ui/elements/divider.h>
 #include <hagame/ui/elements/label.h>
 #include <hagame/core/assets.h>
+#include <hagame/graphics/windows.h>
 
 #include "mainMenu.h"
 #include "../common/ui.h"
@@ -15,13 +16,17 @@ using namespace hg;
 using namespace hg::graphics;
 
 MainMenu::MainMenu(hg::graphics::Window *window):
-    m_window(window),
-    m_menu(Rect(Vec2::Zero(), window->size().cast<float>()))
-{
-
-}
+    m_window(window)
+{}
 
 void MainMenu::onInit() {
+
+    resize();
+
+    Windows::Events.subscribe(WindowEvents::Resize, [&](Window* window) {
+        resize();
+    });
+
     m_menu.root()->style.margin = hg::ui::offset(1. / 3, 1. / 6, 1. / 3, 1. / 6, ui::Unit::Percent);
     m_menu.root()->style.padding = hg::ui::offset(25);
     m_menu.root()->style.backgroundColor = MENU_BG;
@@ -31,17 +36,24 @@ void MainMenu::onInit() {
     };
 
     std::vector<MenuItem> menuItems {
-
+        {
+            "Runtime",
+            [&]() {
+                game()->scenes()->activate("runtime");
+            }
+        }
     };
 
 #ifndef __EMSCRIPTEN__
     menuItems.push_back({
         "Quit to Desktop",
         [&]() {
-            game()->running(false);
+            game()->requestShutdown();
         }
     });
 #endif
+
+
 
     std::vector rowSizes {0.15, 0.1};
 
@@ -73,6 +85,10 @@ void MainMenu::onInit() {
 
 void MainMenu::onUpdate(double dt) {
 
+    auto size = m_window->size();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, size[0], size[1]);
+
     auto state = GameState::Get();
 
     state->input = m_window->input.player(ACTION_MAP, 0);
@@ -90,4 +106,10 @@ void MainMenu::onUpdate(double dt) {
     m_menu.render(dt);
 
     m_menu.update(rawMousePos, dt);
+}
+
+void MainMenu::resize() {
+    auto size = m_window->size();
+    m_menu.rect.pos = Vec2::Zero();
+    m_menu.rect.size = size.cast<float>();
 }

@@ -1,3 +1,6 @@
 [submodule "thirdparty/imgui"]
 	path = thirdparty/imgui
 	url = git@github.com:ocornut/imgui.git
+[submodule "thirdparty/imgui-filebrowser"]
+	path = thirdparty/imgui-filebrowser
+	url = git@github.com:AirGuanZ/imgui-filebrowser.git

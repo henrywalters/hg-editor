@@ -87,21 +87,21 @@ void hge::transformViewer(Transform &transform) {
     ImGui::PushID(6);
     ImGui::TableSetColumnIndex(1);
     input([&]() {
-        ImGui::DragFloat("##Roll", &eulerAngles[0], 0.1, -180, 180);
+        ImGui::DragFloat("##Roll", &eulerAngles[0], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
     }, 0);
     ImGui::PopID();
 
     ImGui::PushID(7);
     ImGui::TableSetColumnIndex(2);
     input([&]() {
-        ImGui::DragFloat("##Pitch", &eulerAngles[1], 0.1,-89.9999, 89.9999);
+        ImGui::DragFloat("##Pitch", &eulerAngles[1], 0.1,-90 + hg::math::EPSILON, 90 - hg::math::EPSILON);
     }, 1);
     ImGui::PopID();
 
     ImGui::PushID(8);
     ImGui::TableSetColumnIndex(3);
     input([&]() {
-        ImGui::DragFloat("##Yaw", &eulerAngles[2], 0.1, -180, 180);
+        ImGui::DragFloat("##Yaw", &eulerAngles[2], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
     }, 2);
     ImGui::PopID();
 

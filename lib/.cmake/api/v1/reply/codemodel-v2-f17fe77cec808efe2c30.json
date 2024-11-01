@@ -43,14 +43,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "HGEditor::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-HGEditor-Release-49bdd5c33b5343bdf12a.json",
+					"jsonFile" : "target-HGEditor-Release-a35b4d9a6917511cacb0.json",
 					"name" : "HGEditor",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "hge::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-hge-Release-8a8f038e294762c6d9ee.json",
+					"jsonFile" : "target-hge-Release-c38bc8bca1a27845f043.json",
 					"name" : "hge",
 					"projectIndex" : 0
 				},

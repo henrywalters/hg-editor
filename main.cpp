@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <hagame/core/hg.h>
+#include <hagame/utils/string.h>
 #include "src/game.h"
 
 #include <hagame/math/quaternion.h>

@@ -25,10 +25,8 @@ using Event = std::variant<>;
 class GameState {
 public:
 
-    struct Settings {
-        bool running = true;
-        bool editing = false;
-    } settings;
+    bool running = false;
+    double elapsedTime = 0;
 
     PersistentSettings persistentSettings;
 

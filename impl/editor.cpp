@@ -2,6 +2,7 @@
 // Created by henry on 10/6/24.
 //
 #include <hge/editor.h>
+#include <hagame/core/game.h>
 #include <hagame/core/assets.h>
 #include <hagame/math/functions.h>
 #include "hge/components/entityViewer.h"
@@ -26,15 +27,49 @@ void Editor::render() {
                                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
                                     ImGuiWindowFlags_NoNavFocus;
 
+    const int PADDING = 15;
+
     // Set the window position and size to cover the entire screen
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(io.DisplaySize);
+    ImGui::SetNextWindowPos(ImVec2(0, PADDING));
+    ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y - PADDING));
 
     ImGui::Begin("DockSpace", nullptr, windowFlags);
 
     // Create a dockspace inside this window
     ImGuiID dockspace_id = ImGui::GetID("MainDockspace");
     ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_PassthruCentralNode);
+
+    if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("New")) {
+                onNewScene();
+            }
+
+            if (ImGui::MenuItem("Save As")) {
+                saveAs();
+            }
+
+            if (!m_saveFile.empty() && ImGui::MenuItem("Save")) {
+                saveToDisc();
+            }
+
+            if (ImGui::MenuItem("Load")) {
+                loadFromDisc();
+            }
+            ImGui::EndMenu();
+        }
+
+//        if (ImGui::BeginMenu("Tools")) {
+//            for (const auto& tool : m_tools) {
+//                if (ImGui::MenuItem(tool->getName().c_str())) {
+//                    tool->open();
+//                }
+//            }
+//            ImGui::EndMenu();
+//        }
+
+        ImGui::EndMainMenuBar();
+    }
 
     ImGui::Begin("Entity Tree");
     m_entities.render(m_scene, m_scene->entities.root.get());
@@ -52,6 +87,22 @@ void Editor::render() {
 
     ImGui::Begin("Output");
 
+    if (ImGui::ImageButton("play", (void*) hg::getTexture("ui/play")->id, ImVec2(15, 15))) {
+        onPlay();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::ImageButton("pause", (void*) hg::getTexture("ui/pause")->id, ImVec2(15, 15))) {
+        onPause();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::ImageButton("reset", (void*) hg::getTexture("ui/reset")->id, ImVec2(15, 15))) {
+        onReset();
+    }
+
     hg::Vec2 size;
     ImTextureID texture;
 
@@ -65,13 +116,15 @@ void Editor::render() {
     }
 
     auto windowSize = ImGui::GetWindowSize();
-    auto finalSize = hg::mapSizeToBounds(size.cast<float>(), hg::Vec2(windowSize[0], windowSize[1] - 50));
+    auto finalSize = hg::mapSizeToBounds(size.cast<float>(), hg::Vec2(windowSize[0], windowSize[1] - 65));
 
     ImGui::Image(texture, ImVec2(finalSize[0], finalSize[1]), ImVec2(0, 1), ImVec2(1, 0));
 
     ImGui::End();
 
     ImGui::End();
+
+    m_browser.render();
 }
 
 void Editor::setOutput(void* textureId, hg::Vec2i size) {
@@ -143,4 +196,30 @@ void Editor::connectEvents() {
             }
         }
     });
+}
+
+void Editor::saveAs() {
+    m_browser.saveFile([&](auto path){
+        if (!hg::utils::s_endsWith(path, ".hgs")) {
+            path += ".hgs";
+        }
+        m_saveFile = path;
+        saveToDisc();
+    }, {".hgs"});
+}
+
+void Editor::saveToDisc() {
+    auto config = m_scene->save();
+    utils::f_write(m_saveFile, config.toString());
+    Events()->emit(EventTypes::SaveScene, Event{m_scene});
+}
+
+void Editor::loadFromDisc() {
+    m_browser.loadFile([&](auto path) {
+        m_saveFile = path;
+        auto config = utils::MultiConfig::Parse(m_saveFile);
+        m_scene->clear();
+        m_scene->load(config);
+        Events()->emit(EventTypes::LoadScene, Event{m_scene});
+    }, {".hgs"});
 }

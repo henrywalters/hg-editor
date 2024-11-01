@@ -35,12 +35,6 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 78,
-				"parent" : 0
-			},
-			{
-				"command" : 1,
-				"file" : 0,
 				"line" : 79,
 				"parent" : 0
 			},
@@ -71,7 +65,13 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 85,
+				"line" : 84,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 86,
 				"parent" : 0
 			},
 			{
@@ -135,7 +135,13 @@
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 84,
+				"line" : 78,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 85,
 				"parent" : 0
 			}
 		]
@@ -180,10 +186,14 @@
 				},
 				{
 					"backtrace" : 18,
-					"path" : "/home/henry/development/games/hg-editor/thirdparty/imgui"
+					"path" : "/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser"
 				},
 				{
 					"backtrace" : 19,
+					"path" : "/home/henry/development/games/hg-editor/thirdparty/imgui"
+				},
+				{
+					"backtrace" : 20,
 					"path" : "/home/henry/development/games/hg-editor/include"
 				},
 				{

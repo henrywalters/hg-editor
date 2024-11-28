@@ -56,7 +56,7 @@ add_library("imgui" STATIC ${IMGUI_GLOB})
 target_include_directories("imgui" PRIVATE ${IMGUI_PATH})
 target_link_libraries("imgui" PRIVATE glfw)
 
-add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h impl/fileBrowser.cpp include/hge/components/fileBrowser.h)
+add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h impl/fileBrowser.cpp include/hge/components/fileBrowser.h include/hge/core/extensions.h include/hge/widgets/enumField.h include/hge/components/textureEditor.h)
 target_include_directories(hge PUBLIC include/)
 target_include_directories(hge PUBLIC impl/)
 target_include_directories(hge PUBLIC ${HAGAME2_INCLUDE_DIR})

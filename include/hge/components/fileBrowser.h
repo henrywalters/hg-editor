@@ -5,12 +5,14 @@
 #ifndef HGEDITOR_FILEBROWSER_H
 #define HGEDITOR_FILEBROWSER_H
 
-
+#include <optional>
 #include <filesystem>
 
 #include <hagame/utils/pubsub.h>
 #include <hagame/utils/config.h>
 #include <hagame/utils/file.h>
+#include <hagame/utils/watcher.h>
+
 #include "imgui.h"
 // #include "imfilebrowser.h"
 
@@ -23,29 +25,44 @@ namespace hge {
     class FileBrowser {
     public:
 
-        FileBrowser() :
-                m_config(hg::utils::Config::Parse(hg::utils::f_readLines("file_browser.ini"))) {}
+        const std::string INI = "filebrowser.ini";
 
-        void loadFile(std::function<void(std::filesystem::path)> onChoose, std::vector<std::string> filters = {});
+        FileBrowser();
 
-        void loadFiles(std::function<void(std::vector<std::filesystem::path>)> onChoose,
-                       std::vector<std::string> filters = {});
+        void loadFile(
+            std::string title,
+            std::function<void(std::filesystem::path)> onChoose,
+            std::vector<std::string> filters = {}
+        );
 
-        void saveFile(std::function<void(std::filesystem::path)> onChoose, std::vector<std::string> filters = {});
+        void loadFiles(
+            std::string title,
+            std::function<void(std::vector<std::filesystem::path>)> onChoose,
+            std::vector<std::string> filters = {}
+        );
 
-        void setPwd(std::string pwd);
+        void saveFile(std::string title, std::function<void(std::filesystem::path)> onChoose, std::vector<std::string> filters = {});
 
         void render();
 
     private:
 
+        struct Browser {
+            bool open = true;
+            std::shared_ptr<ImGui::FileBrowser> browser;
+            bool choosingMany = false;
+            std::function<void(std::filesystem::path)> onChooseOne;
+            std::function<void(std::vector<std::filesystem::path>)> onChooseMany;
+        };
+
+        Browser* newBrowser(std::string title, std::vector<std::string> filters, int flags = 0);
+
         hg::utils::Config m_config;
 
-        std::shared_ptr<ImGui::FileBrowser> m_files;
-        bool m_browsingFiles = false;
-        bool m_choosingMany = false;
-        std::function<void(std::filesystem::path)> m_onChooseOne;
-        std::function<void(std::vector<std::filesystem::path>)> m_onChooseMany;
+        std::unordered_map<std::string, Browser> m_files;
+
+        std::optional<std::string> m_openFile = std::nullopt;
+
     };
 }
 

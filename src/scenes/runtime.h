@@ -9,6 +9,11 @@
 #include <hagame/graphics/window.h>
 #include <hge/editor.h>
 
+
+ENUM(TestEnum)
+ENUM_VALUE(TestEnum, Hello)
+ENUM_VALUE(TestEnum, World)
+
 class Runtime : public hg::Scene {
 public:
 
@@ -18,6 +23,8 @@ public:
     void onUpdate(double dt) override;
 
 private:
+
+    hg::utils::enum_t testEnum;
 
     hge::Editor m_editor;
 

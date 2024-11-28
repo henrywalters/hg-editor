@@ -56,7 +56,7 @@ void hge::transformViewer(Transform &transform) {
         ImGui::PushID(0 + i);
         ImGui::TableSetColumnIndex(i + 1);
         input([&]() {
-            ImGui::DragFloat(("##Position_" + std::to_string(i)).c_str(), &transform.position.vector[i]);
+            ImGui::DragFloat(("##Position_" + std::to_string(i)).c_str(), &transform.position.vector[i], 0.1);
         }, i);
         ImGui::PopID();
     }
@@ -69,114 +69,51 @@ void hge::transformViewer(Transform &transform) {
         ImGui::PushID(1 + i);
         ImGui::TableSetColumnIndex(i + 1);
         input([&]() {
-            ImGui::DragFloat(("##Scale_" + std::to_string(i)).c_str(), &transform.scale.vector[i]);
+            ImGui::DragFloat(("##Scale_" + std::to_string(i)).c_str(), &transform.scale.vector[i], 0.1);
         }, i);
         ImGui::PopID();
     }
 
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
-    ImGui::Text("Rot");
+    ImGui::Text("Rot: %s", transform.rotation.toString().c_str());
 
-    auto eulerAngles = transform.rotation.normalized().eulerAngles();
-
-    for (int i = 0; i < 3; i++) {
-        eulerAngles[i] *= hg::math::RAD2DEG;
-    }
-
-    ImGui::PushID(6);
-    ImGui::TableSetColumnIndex(1);
-    input([&]() {
-        ImGui::DragFloat("##Roll", &eulerAngles[0], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
-    }, 0);
-    ImGui::PopID();
-
-    ImGui::PushID(7);
-    ImGui::TableSetColumnIndex(2);
-    input([&]() {
-        ImGui::DragFloat("##Pitch", &eulerAngles[1], 0.1,-90 + hg::math::EPSILON, 90 - hg::math::EPSILON);
-    }, 1);
-    ImGui::PopID();
-
-    ImGui::PushID(8);
-    ImGui::TableSetColumnIndex(3);
-    input([&]() {
-        ImGui::DragFloat("##Yaw", &eulerAngles[2], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
-    }, 2);
-    ImGui::PopID();
-
-    for (int i = 0; i < 3; i++) {
-        eulerAngles[i] *= hg::math::DEG2RAD;
-    }
-
-    transform.rotation = hg::math::Quaternion<float>(eulerAngles);
+//    auto eulerAngles = transform.rotation.normalized().eulerAngles();
+//
+//    for (int i = 0; i < 3; i++) {
+//        eulerAngles[i] *= hg::math::RAD2DEG;
+//    }
+//
+//    ImGui::PushID(6);
+//    ImGui::TableSetColumnIndex(1);
+//    input([&]() {
+//        ImGui::DragFloat("##Roll", &eulerAngles[0], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
+//    }, 0);
+//    ImGui::PopID();
+//
+//    ImGui::PushID(7);
+//    ImGui::TableSetColumnIndex(2);
+//    input([&]() {
+//        ImGui::DragFloat("##Pitch", &eulerAngles[1], 0.1,-90 + hg::math::EPSILON, 90 - hg::math::EPSILON);
+//    }, 1);
+//    ImGui::PopID();
+//
+//    ImGui::PushID(8);
+//    ImGui::TableSetColumnIndex(3);
+//    input([&]() {
+//        ImGui::DragFloat("##Yaw", &eulerAngles[2], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
+//    }, 2);
+//    ImGui::PopID();
+//
+//    for (int i = 0; i < 3; i++) {
+//        eulerAngles[i] *= hg::math::DEG2RAD;
+//    }
+//
+//    transform.rotation = hg::math::Quaternion<float>(eulerAngles);
 
     ImGui::PopStyleVar();
 
     ImGui::EndTable();
 }
 
-void hge::entityViewer(hg::Entity* entity) {
-    ImGui::InputText("Name", &entity->name);
-
-    if (entity->name.empty()) {
-        entity->name = "Entity<" + std::to_string(entity->id()) + ">";
-    }
-
-    ImGui::Text("ID: %lu", entity->id());
-
-    transformViewer(entity->transform);
-
-//    ImGui::DragFloat3("Position", entity->transform.position.vector);
-//    ImGui::DragFloat3("Scale", entity->transform.scale.vector);
-//
-
-
-    if (ImGui::Button("Add Component")) {
-        ImGui::OpenPopup(COMPONENT_EXPLORER.c_str());
-    }
-
-    auto addComponent = componentExplorer();
-    if (addComponent.has_value()) {
-        auto component = hg::ComponentFactory::Attach(entity, addComponent.value());
-        Events()->emit(EventTypes::AddComponent, Event{ComponentEvent{entity, component->className(), ""}});
-    }
-
-    int index = 0;
-
-    if (entity->components().size() > 0) {
-        ImGui::SeparatorText("Components");
-        for (const auto& component : entity->components()) {
-            ImGui::Separator();
-            ImGui::Text("%s", component->operator std::string().c_str());
-            ImGui::SameLine();
-            ImGui::PushID(index++);
-            if (ImGui::Button("remove")) {
-                hg::ComponentFactory::Get(component->className()).remove(entity);
-                Events()->emit(EventTypes::RemoveComponent, Event{ComponentEvent{entity, component->className(), ""}});
-            }
-            ImGui::PopID();
-            for (const auto& field : hg::ComponentFactory::GetFields(component->className())) {
-                ImGui::PushID(index++);
-
-                if (editComponentField(component, field)) {
-                    Events()->emit(EventTypes::UpdateComponent, Event{ComponentEvent{entity, component->className(), field.field}});
-                }
-
-                if (field.field == "texture") {
-                    if (ImGui::BeginDragDropTarget()) {
-                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("png")) {
-                            auto path = (char*) payload->Data;
-                            field.setter(component, std::string(path));
-                        }
-                        ImGui::EndDragDropTarget();
-                    }
-                }
-
-                ImGui::PopID();
-            }
-
-            component->uiUpdate();
-        }
-    }
-}
+// void hge::entityViewer(hg::Entity* entity);

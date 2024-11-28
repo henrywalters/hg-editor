@@ -3,6 +3,7 @@
 //
 #include "runtime.h"
 #include "hge/core/events.h"
+#include "hge/widgets/enumField.h"
 #include "hge/components/entityViewer.h"
 #include "imgui.h"
 #include "../common/gameState.h"
@@ -11,6 +12,7 @@ Runtime::Runtime(hg::graphics::Window *window):
     m_window(window),
     m_editor(this)
 {}
+
 
 void Runtime::onInit() {
     auto state = GameState::Get();
@@ -34,12 +36,15 @@ void Runtime::onInit() {
 }
 
 void Runtime::onUpdate(double dt) {
-    m_editor.render();
+    m_editor.render(m_window->input.devices.keyboardMouse()->mousePosition());
 
     auto state = GameState::Get();
 
     ImGui::Begin("Runtime");
     ImGui::Text("Elapsed Time: %f", state->elapsedTime);
+
+    // hge::enumField("Test", &testEnum, ENUMS(TestEnum));
+
     ImGui::End();
 
     if (state->running) {

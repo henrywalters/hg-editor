@@ -7,7 +7,7 @@ HGameTemplate
 Makefile
 cmake_install.cmake
 libimgui.a
-
+*.cmake*
 public/*.data
 public/*.html
 public/*.wasm

@@ -5,7 +5,9 @@
 #include <hagame/core/game.h>
 #include <hagame/core/assets.h>
 #include <hagame/math/functions.h>
+#include <hagame/core/prefab.h>
 #include "hge/components/entityViewer.h"
+#include <hge/core/extensions.h>
 #include "imgui.h"
 
 using namespace hg;
@@ -17,114 +19,6 @@ Editor::Editor(hg::Scene *scene, bool _connectEvents):
     if (_connectEvents) {
         connectEvents();
     }
-}
-
-void Editor::render() {
-
-    ImGuiIO& io = ImGui::GetIO();
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-                                    ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                                    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
-                                    ImGuiWindowFlags_NoNavFocus;
-
-    const int PADDING = 15;
-
-    // Set the window position and size to cover the entire screen
-    ImGui::SetNextWindowPos(ImVec2(0, PADDING));
-    ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y - PADDING));
-
-    ImGui::Begin("DockSpace", nullptr, windowFlags);
-
-    // Create a dockspace inside this window
-    ImGuiID dockspace_id = ImGui::GetID("MainDockspace");
-    ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_PassthruCentralNode);
-
-    if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("New")) {
-                onNewScene();
-            }
-
-            if (ImGui::MenuItem("Save As")) {
-                saveAs();
-            }
-
-            if (!m_saveFile.empty() && ImGui::MenuItem("Save")) {
-                saveToDisc();
-            }
-
-            if (ImGui::MenuItem("Load")) {
-                loadFromDisc();
-            }
-            ImGui::EndMenu();
-        }
-
-//        if (ImGui::BeginMenu("Tools")) {
-//            for (const auto& tool : m_tools) {
-//                if (ImGui::MenuItem(tool->getName().c_str())) {
-//                    tool->open();
-//                }
-//            }
-//            ImGui::EndMenu();
-//        }
-
-        ImGui::EndMainMenuBar();
-    }
-
-    ImGui::Begin("Entity Tree");
-    m_entities.render(m_scene, m_scene->entities.root.get());
-    ImGui::End();
-
-    ImGui::Begin("Assets");
-    m_assets.render();
-    ImGui::End();
-
-    if (m_entities.selected()) {
-        ImGui::Begin("Selected Entity");
-        entityViewer(m_entities.selected());
-        ImGui::End();
-    }
-
-    ImGui::Begin("Output");
-
-    if (ImGui::ImageButton("play", (void*) hg::getTexture("ui/play")->id, ImVec2(15, 15))) {
-        onPlay();
-    }
-
-    ImGui::SameLine();
-
-    if (ImGui::ImageButton("pause", (void*) hg::getTexture("ui/pause")->id, ImVec2(15, 15))) {
-        onPause();
-    }
-
-    ImGui::SameLine();
-
-    if (ImGui::ImageButton("reset", (void*) hg::getTexture("ui/reset")->id, ImVec2(15, 15))) {
-        onReset();
-    }
-
-    hg::Vec2 size;
-    ImTextureID texture;
-
-    if (m_hasTexture) {
-        size = m_textureSize.cast<float>();
-        texture = m_textureId;
-    } else {
-        auto tex = hg::getTexture("missing");
-        texture = (ImTextureID)(size_t)tex->id;
-        size = tex->image->size.cast<float>();
-    }
-
-    auto windowSize = ImGui::GetWindowSize();
-    auto finalSize = hg::mapSizeToBounds(size.cast<float>(), hg::Vec2(windowSize[0], windowSize[1] - 65));
-
-    ImGui::Image(texture, ImVec2(finalSize[0], finalSize[1]), ImVec2(0, 1), ImVec2(1, 0));
-
-    ImGui::End();
-
-    ImGui::End();
-
-    m_browser.render();
 }
 
 void Editor::setOutput(void* textureId, hg::Vec2i size) {
@@ -187,25 +81,49 @@ void Editor::connectEvents() {
 
     events->subscribe(EventTypes::DuplicateEntity, [&](const auto& e) {
         auto payload = std::get<EntityEvent>(e.payload);
-        auto entity = m_scene->entities.add((hg::Entity*) payload.entity->parent());
-        entity->transform = payload.entity->transform;
-        for (const auto& component : payload.entity->components()) {
-            auto newComponent = ComponentFactory::Attach(entity, component->className());
-            for (const ComponentFactory::ComponentField& field : ComponentFactory::GetFields(component->className())) {
-                field.setter(newComponent, field.getter(component));
-            }
+        m_scene->entities.duplicate(static_cast<Entity*>(payload.entity));
+//        auto entity = m_scene->entities.add((hg::Entity*) payload.entity->parent());
+//        entity->transform = payload.entity->transform;
+//        for (const auto& component : payload.entity->components()) {
+//            auto newComponent = ComponentFactory::Attach(entity, component->className());
+//            for (const ComponentFactory::ComponentField& field : ComponentFactory::GetFields(component->className())) {
+//                field.setter(newComponent, field.getter(component));
+//            }
+//        }
+    });
+
+    events->subscribe(EventTypes::SavePrefab, [&](const auto& e) {
+        auto payload = std::get<EntityEvent>(e.payload);
+        savePrefab(payload.entity);
+    });
+
+    events->subscribe(EventTypes::AddPrefab, [&](const auto& e) {
+        auto payload = std::get<PrefabEvent>(e.payload);
+        auto parts = hg::utils::f_getParts(payload.prefab);
+        Prefab* prefab;
+        if (hg::hasPrefab(parts.name)) {
+            prefab = hg::getPrefab(parts.name);
+        } else {
+            prefab = hg::loadPrefab(parts.name, parts.absolutePath()).get();
         }
+        m_scene->entities.add(prefab);
+
+//        auto config = utils::MultiConfig::Parse(payload.prefab);
+//        std::cout << config.toString() << "\n";
+//        m_scene->load(config);
     });
 }
 
 void Editor::saveAs() {
-    m_browser.saveFile([&](auto path){
-        if (!hg::utils::s_endsWith(path, ".hgs")) {
-            path += ".hgs";
+    m_browser.saveFile("Scenes", [&](auto path){
+        if (!hg::utils::s_endsWith(path, HG_SCENE)) {
+            path += HG_SCENE;
         }
+        std::cout << "SAVED TO DISC\n";
+        std::cout << path << "\n";
         m_saveFile = path;
         saveToDisc();
-    }, {".hgs"});
+    }, {HG_SCENE});
 }
 
 void Editor::saveToDisc() {
@@ -215,11 +133,41 @@ void Editor::saveToDisc() {
 }
 
 void Editor::loadFromDisc() {
-    m_browser.loadFile([&](auto path) {
+    m_browser.loadFile("Scenes", [&](auto path) {
         m_saveFile = path;
         auto config = utils::MultiConfig::Parse(m_saveFile);
         m_scene->clear();
         m_scene->load(config);
+        m_entities.selected(nullptr);
         Events()->emit(EventTypes::LoadScene, Event{m_scene});
-    }, {".hgs"});
+    }, {HG_SCENE});
+}
+
+void Editor::savePrefab(hg::Entity *entity) {
+    m_browser.saveFile("Prefabs", [&, entity](auto path) {
+
+        if (!hg::utils::s_endsWith(path, HG_PREFAB)) {
+            path += HG_PREFAB;
+        }
+
+        auto parts = hg::utils::f_getParts(path);
+
+        if (!hg::hasPrefab(parts.name)) {
+            if (hg::utils::f_exists(path)) {
+                hg::loadPrefab(parts.name, path);
+            } else {
+                hg::createPrefab(parts.name);
+            }
+        }
+
+        auto prefab = hg::getPrefab(parts.name);
+
+        prefab->updatePrefab(entity);
+        prefab->save(path);
+
+    }, {HG_PREFAB});
+}
+
+hg::Vec2 Editor::mousePos() const {
+    return m_mousePos;
 }

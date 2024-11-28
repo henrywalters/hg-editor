@@ -5,8 +5,17 @@
 #include <hge/core/events.h>
 #include <hagame/core/assets.h>
 #include "imgui.h"
+#include "hge/core/extensions.h"
 
 using namespace hge;
+
+AssetBrowser::AssetBrowser() {
+    m_assetMenus.insert(std::make_pair("hg_pfb", std::vector<Command>({
+        { "Add to Scene", [&](const hg::utils::FileParts& parts) {
+            Events()->emit(EventTypes::AddPrefab, Event{PrefabEvent{parts.absolutePath(), nullptr}});
+        }},
+    })));
+}
 
 void AssetBrowser::render() {
     std::string path = hg::ASSET_DIR;
@@ -58,6 +67,9 @@ void AssetBrowser::render() {
         ImGui::SetCursorPos(ImVec2((ImGui::GetWindowSize().x - 64) * 0.5, 5));
         ImGui::Image((void*)(size_t)texture(fileParts)->id, ImVec2(64, 64));
         ImGui::Text("%s", fileParts.fullName.c_str());
+
+        contextMenu(fileParts);
+
         ImGui::EndChild();
 
         x += size.x + padding;
@@ -106,7 +118,29 @@ hg::graphics::Texture* AssetBrowser::texture(hg::utils::FileParts fileParts) {
         return hg::getTexture("ui/vertex_shader");
     } else if (assetType == "hg") {
         return hg::getTexture("ui/hg");
+    } else if (assetType == "hg_pfb") {
+        return hg::getTexture("ui/prefab");
     }
 
     return hg::getTexture("ui/unknown");
+}
+
+void AssetBrowser::contextMenu(hg::utils::FileParts fileParts) {
+    if (m_assetMenus.find(fileParts.extension) == m_assetMenus.end()) {
+        return;
+    }
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
+        ImGui::OpenPopup(fileParts.name.c_str());
+    }
+
+    if (ImGui::BeginPopup(fileParts.name.c_str())) {
+
+        for (const auto& cmd : m_assetMenus.at(fileParts.extension)) {
+            if (ImGui::Button(cmd.label.c_str())) {
+                cmd.fn(fileParts);
+            }
+        }
+
+        ImGui::EndPopup();
+    }
 }

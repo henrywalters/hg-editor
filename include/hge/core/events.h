@@ -26,6 +26,14 @@ namespace hge {
     ENUM_VALUE(EventTypes, NewScene)
     ENUM_VALUE(EventTypes, LoadScene)
     ENUM_VALUE(EventTypes, SaveScene)
+    ENUM_VALUE(EventTypes, SavePrefab)
+    ENUM_VALUE(EventTypes, AddPrefab)
+    ENUM_VALUE(EventTypes, AddPrefabTo)
+
+    struct PrefabEvent {
+        std::string prefab;
+        hg::Entity* target;
+    };
 
     struct EntityEvent {
         hg::Entity* entity;
@@ -43,7 +51,7 @@ namespace hge {
     using LevelEvent = hg::Scene*;
 
     struct Event {
-        std::variant<EntityEvent, ComponentEvent, AssetEvent, LevelEvent> payload;
+        std::variant<EntityEvent, ComponentEvent, AssetEvent, LevelEvent, PrefabEvent> payload;
     };
 
     hg::Publisher<EventTypes::type, Event>* Events();

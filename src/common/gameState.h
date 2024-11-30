@@ -28,6 +28,9 @@ public:
     bool running = false;
     double elapsedTime = 0;
 
+    bool hasCamera;
+    hg::Vec2 rawMousePos, mousePos;
+
     PersistentSettings persistentSettings;
 
     hg::Publisher<EventType, Event> events;

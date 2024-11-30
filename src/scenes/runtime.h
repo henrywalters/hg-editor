@@ -22,6 +22,8 @@ public:
     void onInit() override;
     void onUpdate(double dt) override;
 
+    hge::Editor* editor() { return &m_editor; }
+
 private:
 
     hg::utils::enum_t testEnum;

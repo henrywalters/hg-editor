@@ -9,7 +9,7 @@
 #include <hagame/utils/enum.h>
 
 namespace hge {
-    void enumField(std::string label, hg::utils::enum_t* val, std::vector<hg::utils::EnumElement>* enums) {
+    inline void enumField(std::string label, hg::utils::uuid_t* val, std::vector<hg::utils::EnumElement>* enums) {
         if (ImGui::BeginCombo(label.c_str(), enums->at(*val).label.c_str())) {
             for (const auto& e : *enums) {
                 bool selected = e.key == *val;

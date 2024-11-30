@@ -60,12 +60,12 @@ void AssetBrowser::render() {
         }
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
             ImGui::SetDragDropPayload(fileParts.extension.c_str(), (void*) file.data(), sizeof(char) * file.size());
-            ImGui::Image((void*)(size_t)texture(fileParts)->id, ImVec2(64, 64));
+            ImGui::Image(texture(fileParts)->id, ImVec2(64, 64));
             ImGui::Text("%s", fileParts.fullName.c_str());
             ImGui::EndDragDropSource();
         }
         ImGui::SetCursorPos(ImVec2((ImGui::GetWindowSize().x - 64) * 0.5, 5));
-        ImGui::Image((void*)(size_t)texture(fileParts)->id, ImVec2(64, 64));
+        ImGui::Image(texture(fileParts)->id, ImVec2(64, 64));
         ImGui::Text("%s", fileParts.fullName.c_str());
 
         contextMenu(fileParts);
@@ -84,7 +84,7 @@ void AssetBrowser::render() {
         auto parts = hg::utils::f_getParts(dir);
         ImGui::BeginChild(dir.c_str(), size, true);
         ImGui::SetCursorPos(ImVec2((ImGui::GetWindowSize().x - 64) * 0.5, 0));
-        ImGui::Image((void*)(size_t)hg::getTexture("ui/directory")->id, ImVec2(64, 64));
+        ImGui::Image(hg::getTexture("ui/directory")->id, ImVec2(64, 64));
         if (ImGui::IsItemClicked()) {
             m_path.push_back(parts.name);
         }

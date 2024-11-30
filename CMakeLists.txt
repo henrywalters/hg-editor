@@ -30,6 +30,8 @@ pkg_search_module(GLFW REQUIRED glfw3)
 # pkg_search_module(GL REQUIRED gl)
 
 set(IMGUI_PATH ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui)
+set(IMGUIZMO_PATH ${CMAKE_CURRENT_LIST_DIR}/thirdparty/ImGuizmo)
+
 file(GLOB IMGUI_GLOB
         ${IMGUI_PATH}/imgui.h
         ${IMGUI_PATH}/imgui.cpp
@@ -56,33 +58,48 @@ add_library("imgui" STATIC ${IMGUI_GLOB})
 target_include_directories("imgui" PRIVATE ${IMGUI_PATH})
 target_link_libraries("imgui" PRIVATE glfw)
 
-add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h impl/fileBrowser.cpp include/hge/components/fileBrowser.h include/hge/core/extensions.h include/hge/widgets/enumField.h include/hge/components/textureEditor.h)
+set(IMGUIZMO_SRC ${IMGUIZMO_PATH}/ImGuizmo.cpp include/hge/widgets/textureField.h)
+
+# Add ImGuizmo to your project
+add_library(imguizmo STATIC ${IMGUIZMO_SRC})
+target_include_directories(imguizmo PUBLIC
+        ${IMGUIZMO_PATH}
+        ${IMGUI_PATH} # ImGuizmo depends on ImGui headers
+)
+target_link_libraries(imguizmo PUBLIC imgui)
+
+add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h impl/fileBrowser.cpp include/hge/components/fileBrowser.h include/hge/core/extensions.h include/hge/widgets/enumField.h include/hge/components/textureEditor.h include/hge/components/gizmo.h impl/gizmo.cpp)
 target_include_directories(hge PUBLIC include/)
 target_include_directories(hge PUBLIC impl/)
 target_include_directories(hge PUBLIC ${HAGAME2_INCLUDE_DIR})
 target_include_directories(hge PUBLIC ${IMGUI_PATH})
+target_include_directories(hge PUBLIC ${IMGUIZMO_PATH})
 target_include_directories(hge PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/glad/include/)
+target_include_directories(hge PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/ImGuizmo)
 
 target_link_libraries(hge ${HAGAME2_LIBRARY})
 target_link_libraries(hge imgui)
+target_link_libraries(hge imguizmo)
 target_link_libraries(hge ${GLFW_LIBRARIES})
 
 include_directories(${X11_INCLUDE_DIR})
 
-add_executable(HGEditor main.cpp src/constants.h src/game.h src/game.cpp src/scenes/mainMenu.h src/scenes/mainMenu.cpp src/common/actionMap.h src/common/gameState.cpp src/common/persistentSettings.cpp src/common/ui.cpp src/common/enums/debugLevel.h include/hge/core/events.h impl/events.cpp src/scenes/runtime.h src/scenes/runtime.cpp)
+add_executable(HGEditor main.cpp src/constants.h src/game.h src/game.cpp src/scenes/mainMenu.h src/scenes/mainMenu.cpp src/common/actionMap.h src/common/gameState.cpp src/common/persistentSettings.cpp src/common/ui.cpp src/common/enums/debugLevel.h include/hge/core/events.h impl/events.cpp src/scenes/runtime.h src/scenes/runtime.cpp src/systems/renderer.cpp src/systems/renderer.cpp)
 target_include_directories(HGEditor PUBLIC ${HAGAME2_INCLUDE_DIR})
 target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/asio/asio/include/)
 target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/glad/include/)
 target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/assimp/include/)
 target_include_directories(HGEditor PUBLIC ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-filebrowser/)
 target_include_directories(HGEditor PUBLIC ${IMGUI_PATH})
+target_include_directories(HGEditor PUBLIC ${IMGUIZMO_PATH})
+target_include_directories(HGEditor PUBLIC include/)
 target_link_libraries(HGEditor ${HAGAME2_LIBRARY})
 target_link_libraries(HGEditor ${GLFW_LIBRARIES})
 target_link_libraries(HGEditor ${OPENGL_LIBRARIES})
 target_link_libraries(HGEditor imgui)
+target_link_libraries(HGEditor imguizmo)
 target_link_libraries(HGEditor ${X11_LIBRARIES})
 target_link_libraries(HGEditor ${ALSA_LIBRARIES})
-target_include_directories(HGEditor PUBLIC include/)
 target_link_libraries(HGEditor hge)
 
 # set(CMAKE_TOOLCHAIN_FILE /home/henry/emsdk/)

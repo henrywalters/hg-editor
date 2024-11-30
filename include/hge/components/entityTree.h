@@ -25,6 +25,7 @@ namespace hge {
 
         hg::Entity* selected() { return m_selected; }
         void selected(hg::Entity* entity) {
+            Events()->emit(EventTypes::SelectEntity, Event{EntityEvent{entity, nullptr}});
             m_selected = entity;
         }
 

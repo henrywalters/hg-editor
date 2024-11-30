@@ -6,6 +6,7 @@
 #include <hagame/graphics/color.h>
 #include "imgui.h"
 #include "../../thirdparty/imgui/misc/cpp/imgui_stdlib.h"
+#include "hge/widgets/textureField.h"
 
 using namespace hge;
 
@@ -64,9 +65,8 @@ std::optional<std::string> hge::componentExplorer() {
     if (std::get<Type>(field.getter(component)) != initial) {               \
         field.setter(component, initial);                                       \
         return true;                                                            \
-    } else {                                                                     \
-        return false;                                                           \
-    }                                                                           \
+    }\
+    return false;                                                            \
 }
 
 
@@ -92,9 +92,8 @@ bool hge::editComponentField(hg::Component* component, hg::ComponentFactory::Com
         if (std::get<std::string>(value) != std::string(initial.data())) {
             field.setter(component, std::string(initial.data()));
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     if (field.type == "hg::graphics::Color") {
@@ -104,9 +103,19 @@ bool hge::editComponentField(hg::Component* component, hg::ComponentFactory::Com
         if (std::get<hg::graphics::Color>(value) != initial) {
             field.setter(component, initial);
             return true;
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    if (field.type == "hg::graphics::TextureAsset") {
+        auto initial = std::get<hg::graphics::TextureAsset>(value);
+        auto value = initial;
+        textureField(field.field, value);
+        if (initial != value) {
+            field.setter(component, value);
+            return true;
+        }
+        return false;
     }
 
     ImGui::Text("Unsupported Type: %s", field.type.c_str());

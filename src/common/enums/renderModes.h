@@ -8,7 +8,7 @@
 #include <hagame/utils/enum.h>
 
 ENUM(RenderMode)
-ENUM_VALUE(RenderMode, Color)
+ENUM_VALUE(RenderMode, Geometry)
 ENUM_VALUE(RenderMode, Lighting)
 ENUM_VALUE(RenderMode, Debug)
 ENUM_VALUE(RenderMode, UI)

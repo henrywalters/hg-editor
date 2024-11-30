@@ -9,6 +9,7 @@
 #include "hge/components/entityViewer.h"
 #include <hagame/core/game.h>
 #include <hagame/utils/aliases.h>
+#include <hge/components/gizmo.h>
 #include <hge/components/fileBrowser.h>
 #include <hagame/math/functions.h>
 #include <hagame/core/assets.h>
@@ -29,7 +30,8 @@ namespace hge {
 
         explicit Editor(hg::Scene* scene, bool _connectEvents = true);
 
-        void render(hg::Vec2 rawMousePos) {
+        void render(hg::Vec2 rawMousePos, bool orthographic, hg::Recti window, hg::Mat4 proj, hg::Mat4 view) {
+
             ImGuiIO& io = ImGui::GetIO();
             ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
                                            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
@@ -102,32 +104,36 @@ namespace hge {
 
             ImGui::Begin("Output");
 
-            if (ImGui::ImageButton("play", (void*) hg::getTexture("ui/play")->id, ImVec2(15, 15))) {
+            if (ImGui::ImageButton("play", hg::getTexture("ui/play")->id, ImVec2(15, 15))) {
                 m_commandQueue.push_back(onPlay);
                 //onPlay();
             }
 
             ImGui::SameLine();
 
-            if (ImGui::ImageButton("pause", (void*) hg::getTexture("ui/pause")->id, ImVec2(15, 15))) {
+            if (ImGui::ImageButton("pause", hg::getTexture("ui/pause")->id, ImVec2(15, 15))) {
                 m_commandQueue.push_back(onPause);
                 //onPause();
             }
 
             ImGui::SameLine();
 
-            if (ImGui::ImageButton("reset", (void*) hg::getTexture("ui/reset")->id, ImVec2(15, 15))) {
+            if (ImGui::ImageButton("reset", hg::getTexture("ui/reset")->id, ImVec2(15, 15))) {
                 m_entities.selected(nullptr);
                 m_commandQueue.push_back(onReset);
                 //onReset();
             }
+
+            ImGui::SameLine();
+
+            m_gizmo.renderModeSelector();
 
             hg::Vec2 size;
             ImTextureID texture;
 
             if (m_hasTexture) {
                 size = m_textureSize.cast<float>();
-                texture = m_textureId;
+                texture = reinterpret_cast<ImTextureID>(static_cast<void*>(m_textureId));
             } else {
                 auto tex = hg::getTexture("missing");
                 texture = (ImTextureID)(size_t)tex->id;
@@ -156,6 +162,8 @@ namespace hge {
                 m_commandQueue.pop_front();
                 front();
             }
+
+            m_gizmo.render(orthographic, hg::Recti(hg::Vec2i(minPoint.x, minPoint.y), finalSize.cast<int>()), proj, view);
         }
 
         void setOutput(void* m_textureId, hg::Vec2i size);
@@ -185,6 +193,7 @@ namespace hge {
         FileBrowser m_browser;
         AssetBrowser m_assets;
         EntityTree m_entities;
+        Gizmo m_gizmo;
     };
 }
 

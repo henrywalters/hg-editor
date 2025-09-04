@@ -60,12 +60,12 @@ void AssetBrowser::render() {
         }
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
             ImGui::SetDragDropPayload(fileParts.extension.c_str(), (void*) file.data(), sizeof(char) * file.size());
-            ImGui::Image(texture(fileParts)->id, ImVec2(64, 64));
+            ImGui::Image((ImTextureID)texture(fileParts)->id, ImVec2(64, 64));
             ImGui::Text("%s", fileParts.fullName.c_str());
             ImGui::EndDragDropSource();
         }
         ImGui::SetCursorPos(ImVec2((ImGui::GetWindowSize().x - 64) * 0.5, 5));
-        ImGui::Image(texture(fileParts)->id, ImVec2(64, 64));
+        ImGui::Image((ImTextureID)texture(fileParts)->id, ImVec2(64, 64));
         ImGui::Text("%s", fileParts.fullName.c_str());
 
         contextMenu(fileParts);

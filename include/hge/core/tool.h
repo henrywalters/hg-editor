@@ -31,7 +31,9 @@ namespace hge {
 
         void render(double dt) {
             if (m_open) {
+                ImGui::Begin(getButtonLabel().c_str(), &m_open);
                 renderUI(dt);
+                ImGui::End();
                 renderOverlay();
             }
         }
@@ -66,6 +68,8 @@ namespace hge {
         virtual void renderOverlay() {};
     };
 
+    template <typename T>
+    concept IsTool = std::is_base_of<Tool, T>::value;
 }
 
 #endif //HGEDITOR_TOOL_H

@@ -11,15 +11,16 @@
 #include "hge/components/componentExplorer.h"
 #include "hge/core/events.h"
 #include <imgui.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 namespace hge {
 
     void transformViewer(hg::math::Transform& transform);
     inline void entityViewer(hg::Entity *entity) {
 
-        ImGui::Text(entity->name.c_str());
+        // ImGui::Text(entity->name.c_str());
 
-        //ImGui::InputText("Name", &entity->name);
+        ImGui::InputText("Name", &entity->name);
 
         if (entity->name.empty()) {
             entity->name = "Entity<" + std::to_string(entity->id()) + ">";
@@ -61,6 +62,7 @@ namespace hge {
                 for (const auto& field : hg::ComponentFactory::GetFields(component->className())) {
                     ImGui::PushID(index++);
 
+                    ImGui::SeparatorText(field.field.c_str());
                     if (editComponentField(component, field)) {
                         Events()->emit(EventTypes::UpdateComponent, Event{ComponentEvent{entity, component->className(), field.field}});
                     }

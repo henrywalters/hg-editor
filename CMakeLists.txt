@@ -58,7 +58,7 @@ add_library("imgui" STATIC ${IMGUI_GLOB})
 target_include_directories("imgui" PRIVATE ${IMGUI_PATH})
 target_link_libraries("imgui" PRIVATE glfw)
 
-set(IMGUIZMO_SRC ${IMGUIZMO_PATH}/ImGuizmo.cpp include/hge/widgets/textureField.h)
+set(IMGUIZMO_SRC ${IMGUIZMO_PATH}/ImGuizmo.cpp )
 
 # Add ImGuizmo to your project
 add_library(imguizmo STATIC ${IMGUIZMO_SRC})
@@ -68,7 +68,7 @@ target_include_directories(imguizmo PUBLIC
 )
 target_link_libraries(imguizmo PUBLIC imgui)
 
-add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h impl/fileBrowser.cpp include/hge/components/fileBrowser.h include/hge/core/extensions.h include/hge/widgets/enumField.h include/hge/components/textureEditor.h include/hge/components/gizmo.h impl/gizmo.cpp)
+add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h impl/fileBrowser.cpp include/hge/components/fileBrowser.h include/hge/core/extensions.h include/hge/widgets/enumField.h include/hge/components/textureEditor.h include/hge/components/gizmo.h impl/gizmo.cpp include/hge/widgets/textureField.h)
 target_include_directories(hge PUBLIC include/)
 target_include_directories(hge PUBLIC impl/)
 target_include_directories(hge PUBLIC ${HAGAME2_INCLUDE_DIR})

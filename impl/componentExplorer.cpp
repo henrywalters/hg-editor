@@ -35,7 +35,7 @@ std::optional<std::string> hge::componentExplorer() {
 
 #define PRIMITIVE_FIELD(Type, Func) if (field.type == #Type) {                  \
     Type initial = std::get<Type>(value);                                  \
-    ImGui::Func(field.field.c_str(), &initial);                                 \
+    ImGui::Func(field.type.c_str(), &initial);                                 \
     if (std::get<Type>(field.getter(component)) != initial) {               \
         field.setter(component, initial);                                       \
         return true;                                                            \
@@ -47,9 +47,9 @@ std::optional<std::string> hge::componentExplorer() {
 #define NUMERIC_FIELD(Type, Func) if (field.type == #Type) {                  \
     Type initial = std::get<Type>(value);                                  \
     if (field.number.has_value()) {                                                                          \
-        ImGui::Func(field.field.c_str(), &initial, field.number.value().step, field.number.value().min, field.number.value().max); \
+        ImGui::Func(field.type.c_str(), &initial, field.number.value().step, field.number.value().min, field.number.value().max); \
     } else {                                                                    \
-        ImGui::Func(field.field.c_str(), &initial);                                 \
+        ImGui::Func(field.type.c_str(), &initial);                                 \
     }                                                                          \
     if (std::get<Type>(field.getter(component)) != initial) {               \
         field.setter(component, initial);                                       \
@@ -61,7 +61,7 @@ std::optional<std::string> hge::componentExplorer() {
 
 #define HG_VECTOR_FIELD(Type, Func) if (field.type == #Type) {                  \
     Type initial = std::get<Type>(value);                                  \
-    ImGui::Func(field.field.c_str(), initial.vector);                                 \
+    ImGui::Func(field.type.c_str(), initial.vector);                                 \
     if (std::get<Type>(field.getter(component)) != initial) {               \
         field.setter(component, initial);                                       \
         return true;                                                            \
@@ -88,7 +88,7 @@ bool hge::editComponentField(hg::Component* component, hg::ComponentFactory::Com
 
     if (field.type == "std::string") {
         std::string initial = std::get<std::string>(value);
-        ImGui::InputText(field.field.c_str(), &initial);
+        ImGui::InputText(field.type.c_str(), &initial);
         if (std::get<std::string>(value) != std::string(initial.data())) {
             field.setter(component, std::string(initial.data()));
             return true;
@@ -98,8 +98,8 @@ bool hge::editComponentField(hg::Component* component, hg::ComponentFactory::Com
 
     if (field.type == "hg::graphics::Color") {
         auto initial = std::get<hg::graphics::Color>(value);
-        //ImGui::ColorPicker4(field.field.c_str(), initial.vector);
-        ImGui::ColorEdit4(field.field.c_str(), initial.vector, ImGuiColorEditFlags_Float);
+        //ImGui::ColorPicker4(field.type.c_str(), initial.vector);
+        ImGui::ColorEdit4(field.type.c_str(), initial.vector, ImGuiColorEditFlags_Float);
         if (std::get<hg::graphics::Color>(value) != initial) {
             field.setter(component, initial);
             return true;
@@ -118,6 +118,18 @@ bool hge::editComponentField(hg::Component* component, hg::ComponentFactory::Com
         return false;
     }
 
-    ImGui::Text("Unsupported Type: %s", field.type.c_str());
+    if (field.type == "hg::Rect") {
+        auto initial = std::get<hg::Rect>(value);
+        auto value = initial;
+        ImGui::DragFloat2("pos", value.pos.vector);
+        ImGui::DragFloat2("size", value.size.vector);
+        if (initial != value) {
+            field.setter(component, value);
+            return true;
+        }
+        return false;
+    }
+
+    ImGui::Text("Unsupported Field Type: %s", field.type.c_str());
     return false;
 }

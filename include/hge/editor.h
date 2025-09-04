@@ -7,6 +7,7 @@
 
 #include "hge.h"
 #include "hge/components/entityViewer.h"
+#include "hge/core/tool.h"
 #include <hagame/core/game.h>
 #include <hagame/utils/aliases.h>
 #include <hge/components/gizmo.h>
@@ -73,14 +74,14 @@ namespace hge {
                     ImGui::EndMenu();
                 }
 
-//        if (ImGui::BeginMenu("Tools")) {
-//            for (const auto& tool : m_tools) {
-//                if (ImGui::MenuItem(tool->getName().c_str())) {
-//                    tool->open();
-//                }
-//            }
-//            ImGui::EndMenu();
-//        }
+                if (ImGui::BeginMenu("Tools")) {
+                    for (const auto& tool : m_tools) {
+                        if (ImGui::MenuItem(tool->getName().c_str())) {
+                            tool->open();
+                        }
+                    }
+                    ImGui::EndMenu();
+                }
 
                 ImGui::EndMainMenuBar();
             }
@@ -104,21 +105,21 @@ namespace hge {
 
             ImGui::Begin("Output");
 
-            if (ImGui::ImageButton("play", hg::getTexture("ui/play")->id, ImVec2(15, 15))) {
+            if (ImGui::ImageButton("play", (ImTextureID)hg::getTexture("ui/play")->id, ImVec2(15, 15))) {
                 m_commandQueue.push_back(onPlay);
                 //onPlay();
             }
 
             ImGui::SameLine();
 
-            if (ImGui::ImageButton("pause", hg::getTexture("ui/pause")->id, ImVec2(15, 15))) {
+            if (ImGui::ImageButton("pause", (ImTextureID)hg::getTexture("ui/pause")->id, ImVec2(15, 15))) {
                 m_commandQueue.push_back(onPause);
                 //onPause();
             }
 
             ImGui::SameLine();
 
-            if (ImGui::ImageButton("reset", hg::getTexture("ui/reset")->id, ImVec2(15, 15))) {
+            if (ImGui::ImageButton("reset", (ImTextureID)hg::getTexture("ui/reset")->id, ImVec2(15, 15))) {
                 m_entities.selected(nullptr);
                 m_commandQueue.push_back(onReset);
                 //onReset();
@@ -163,6 +164,10 @@ namespace hge {
                 front();
             }
 
+            for (auto&& tool : m_tools) {
+                tool->render(m_scene->game()->dt());
+            }
+
             m_gizmo.render(orthographic, hg::Recti(hg::Vec2i(minPoint.x, minPoint.y), finalSize.cast<int>()), proj, view);
         }
 
@@ -177,6 +182,13 @@ namespace hge {
 
         hg::Vec2 mousePos() const;
 
+        template <IsTool ToolType, typename... Args>
+        std::shared_ptr<ToolType> registerTool(Args&&... args) {
+            auto tool = std::make_shared<ToolType>(std::forward<Args>(args)...);
+            m_tools.push_back(tool);
+            return tool;
+        }
+
     private:
 
         std::deque<std::function<void()>> m_commandQueue;
@@ -186,6 +198,8 @@ namespace hge {
         bool m_hasTexture = false;
         hg::Vec2i m_textureSize;
         void* m_textureId;
+
+        std::vector<std::shared_ptr<Tool>> m_tools;
 
         hg::Vec2 m_mousePos;
 

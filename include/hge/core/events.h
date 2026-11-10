@@ -29,6 +29,10 @@ namespace hge {
     ENUM_VALUE(EventTypes, SavePrefab)
     ENUM_VALUE(EventTypes, AddPrefab)
     ENUM_VALUE(EventTypes, AddPrefabTo)
+    ENUM_VALUE(EventTypes, OpenTool)
+    ENUM_VALUE(EventTypes, StartGame)
+    ENUM_VALUE(EventTypes, PauseGame)
+    ENUM_VALUE(EventTypes, RestartGame)
 
     struct PrefabEvent {
         std::string prefab;
@@ -46,12 +50,19 @@ namespace hge {
         std::string field;
     };
 
+    struct ToolEvent {
+        std::string toolName;
+        hg::Component* component;
+    };
+
+    struct RuntimeEvent {};
+
     using AssetEvent = hg::utils::FileParts;
 
     using LevelEvent = hg::Scene*;
 
     struct Event {
-        std::variant<EntityEvent, ComponentEvent, AssetEvent, LevelEvent, PrefabEvent> payload;
+        std::variant<EntityEvent, ComponentEvent, AssetEvent, LevelEvent, PrefabEvent, ToolEvent, RuntimeEvent> payload;
     };
 
     hg::Publisher<EventTypes::type, Event>* Events();

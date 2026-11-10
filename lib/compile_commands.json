@@ -1,0 +1,176 @@
+[
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/backends/imgui_impl_glfw.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/backends/imgui_impl_glfw.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/backends/imgui_impl_glfw.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/backends/imgui_impl_glfw.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/backends/imgui_impl_opengl3.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/backends/imgui_impl_opengl3.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/backends/imgui_impl_opengl3.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/backends/imgui_impl_opengl3.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/imgui.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/imgui.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/imgui.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/imgui.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/imgui_demo.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/imgui_demo.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/imgui_demo.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/imgui_demo.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/imgui_draw.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/imgui_draw.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/imgui_draw.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/imgui_draw.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/imgui_tables.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/imgui_tables.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/imgui_tables.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/imgui_tables.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/imgui_widgets.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/imgui_widgets.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/imgui_widgets.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/imgui_widgets.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imgui.dir/thirdparty/imgui/misc/cpp/imgui_stdlib.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/imgui/misc/cpp/imgui_stdlib.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/imgui/misc/cpp/imgui_stdlib.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imgui.dir/thirdparty/imgui/misc/cpp/imgui_stdlib.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/thirdparty/imgui -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/imguizmo.dir/thirdparty/ImGuizmo/ImGuizmo.cpp.o -c /home/henry/development/games/hg-editor/thirdparty/ImGuizmo/ImGuizmo.cpp",
+  "file": "/home/henry/development/games/hg-editor/thirdparty/ImGuizmo/ImGuizmo.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/imguizmo.dir/thirdparty/ImGuizmo/ImGuizmo.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/assetBrowser.cpp.o -c /home/henry/development/games/hg-editor/impl/assetBrowser.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/assetBrowser.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/assetBrowser.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/camera.cpp.o -c /home/henry/development/games/hg-editor/impl/camera.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/camera.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/camera.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/componentExplorer.cpp.o -c /home/henry/development/games/hg-editor/impl/componentExplorer.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/componentExplorer.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/componentExplorer.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/dragTarget.cpp.o -c /home/henry/development/games/hg-editor/impl/dragTarget.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/dragTarget.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/dragTarget.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/editor.cpp.o -c /home/henry/development/games/hg-editor/impl/editor.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/editor.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/editor.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/entityTree.cpp.o -c /home/henry/development/games/hg-editor/impl/entityTree.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/entityTree.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/entityTree.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/entityViewer.cpp.o -c /home/henry/development/games/hg-editor/impl/entityViewer.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/entityViewer.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/entityViewer.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/events.cpp.o -c /home/henry/development/games/hg-editor/impl/events.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/events.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/events.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/fileBrowser.cpp.o -c /home/henry/development/games/hg-editor/impl/fileBrowser.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/fileBrowser.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/fileBrowser.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/gizmo.cpp.o -c /home/henry/development/games/hg-editor/impl/gizmo.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/gizmo.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/gizmo.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/spriteSheetEditor.cpp.o -c /home/henry/development/games/hg-editor/impl/spriteSheetEditor.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/spriteSheetEditor.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/spriteSheetEditor.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/hge.dir/impl/tilemapEditor.cpp.o -c /home/henry/development/games/hg-editor/impl/tilemapEditor.cpp",
+  "file": "/home/henry/development/games/hg-editor/impl/tilemapEditor.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/hge.dir/impl/tilemapEditor.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/common/gameState.cpp.o -c /home/henry/development/games/hg-editor/src/common/gameState.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/common/gameState.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/common/gameState.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/common/persistentSettings.cpp.o -c /home/henry/development/games/hg-editor/src/common/persistentSettings.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/common/persistentSettings.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/common/persistentSettings.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/common/ui.cpp.o -c /home/henry/development/games/hg-editor/src/common/ui.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/common/ui.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/common/ui.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/game.cpp.o -c /home/henry/development/games/hg-editor/src/game.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/game.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/game.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/main.cpp.o -c /home/henry/development/games/hg-editor/src/main.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/main.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/scenes/mainMenu.cpp.o -c /home/henry/development/games/hg-editor/src/scenes/mainMenu.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/scenes/mainMenu.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/scenes/mainMenu.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/scenes/runtime.cpp.o -c /home/henry/development/games/hg-editor/src/scenes/runtime.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/scenes/runtime.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/scenes/runtime.cpp.o"
+},
+{
+  "directory": "/home/henry/development/games/hg-editor/lib",
+  "command": "/usr/bin/clang++-19 -I/home/henry/development/games/HaGameLite/thirdparty/entt/src -I/home/henry/development/games/HaGameLite/thirdparty/box2d/include -I/home/henry/development/games/HaGameLite/include -I/home/henry/development/games/HaGameLite/thirdparty/asio/asio/include -I/home/henry/development/games/HaGameLite/thirdparty/glad/include -I/home/henry/development/games/HaGameLite/thirdparty/assimp/include -I/home/henry/development/games/hg-editor/thirdparty/imgui-filebrowser -I/home/henry/development/games/hg-editor/thirdparty/imgui -I/home/henry/development/games/hg-editor/thirdparty/ImGuizmo -I/home/henry/development/games/hg-editor/include -I/home/henry/development/games/hg-editor/impl -I/home/henry/development/games/HaGameLite/thirdparty/ImGuizmo -I/home/henry/development/games/HaGameLite/thirdparty/json/include -O3 -DNDEBUG -std=gnu++20 -fcolor-diagnostics -o CMakeFiles/HGEditor.dir/src/systems/renderer.cpp.o -c /home/henry/development/games/hg-editor/src/systems/renderer.cpp",
+  "file": "/home/henry/development/games/hg-editor/src/systems/renderer.cpp",
+  "output": "/home/henry/development/games/hg-editor/lib/CMakeFiles/HGEditor.dir/src/systems/renderer.cpp.o"
+}
+]

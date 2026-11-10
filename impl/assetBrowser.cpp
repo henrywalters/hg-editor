@@ -2,6 +2,8 @@
 // Created by henry on 12/16/23.
 //
 #include <hge/components/assetBrowser.h>
+#include <algorithm>
+#include <cctype>
 #include <hge/core/events.h>
 #include <hagame/core/assets.h>
 #include "imgui.h"
@@ -51,7 +53,19 @@ void AssetBrowser::render() {
         }
     }
 
-    for (const auto& file : hg::utils::d_listFiles(path)) {
+    // By name, ignoring case, rather than the order the file system happens to list them in
+    auto byName = [](std::vector<std::string> paths) {
+        auto lower = [](std::string s) {
+            std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+            return s;
+        };
+        std::sort(paths.begin(), paths.end(), [&](std::string const& a, std::string const& b) {
+            return lower(a) < lower(b);
+        });
+        return paths;
+    };
+
+    for (const auto& file : byName(hg::utils::d_listFiles(path))) {
         ImGui::BeginChild(file.c_str(), size, true);
         auto fileParts = hg::utils::f_getParts(file);
         if (ImGui::IsWindowHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
@@ -59,7 +73,8 @@ void AssetBrowser::render() {
             events->emit(EventTypes::SelectAsset, Event{fileParts});
         }
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
-            ImGui::SetDragDropPayload(fileParts.extension.c_str(), (void*) file.data(), sizeof(char) * file.size());
+            auto assetPath = hg::utils::s_replace(file, hg::ASSET_DIR, "");
+            ImGui::SetDragDropPayload(fileParts.extension.c_str(), (void*) assetPath.c_str(), assetPath.size() + 1);
             ImGui::Image((ImTextureID)texture(fileParts)->id, ImVec2(64, 64));
             ImGui::Text("%s", fileParts.fullName.c_str());
             ImGui::EndDragDropSource();
@@ -80,11 +95,11 @@ void AssetBrowser::render() {
         }
     }
 
-    for (const auto& dir : hg::utils::d_listDirs(path)) {
+    for (const auto& dir : byName(hg::utils::d_listDirs(path))) {
         auto parts = hg::utils::f_getParts(dir);
         ImGui::BeginChild(dir.c_str(), size, true);
         ImGui::SetCursorPos(ImVec2((ImGui::GetWindowSize().x - 64) * 0.5, 0));
-        ImGui::Image(hg::getTexture("ui/directory")->id, ImVec2(64, 64));
+        ImGui::Image(hg::getTexture("textures/ui/directory")->id, ImVec2(64, 64));
         if (ImGui::IsItemClicked()) {
             m_path.push_back(parts.name);
         }
@@ -104,25 +119,25 @@ hg::graphics::Texture* AssetBrowser::texture(hg::utils::FileParts fileParts) {
     std::string assetType = fileParts.extension;
 
     if (assetType == "wav") {
-        return hg::getTexture("ui/audio");
+        return hg::getTexture("textures/ui/audio");
     } else if (assetType == "png") {
-        auto textureName = hg::utils::s_replace(fileParts.path, hg::ASSET_DIR + "textures/", "") + fileParts.name;
+        auto textureName = hg::utils::s_replace(fileParts.path, hg::ASSET_DIR, "") + fileParts.name;
         return hg::getTexture(textureName);
     } else if (assetType == "ttf") {
-        return hg::getTexture("ui/font");
+        return hg::getTexture("textures/ui/font");
     } else if (assetType == "cpp") {
-        return hg::getTexture("ui/script");
+        return hg::getTexture("textures/ui/script");
     } else if (assetType == "frag") {
-        return hg::getTexture("ui/fragment_shader");
+        return hg::getTexture("textures/ui/fragment_shader");
     } else if (assetType == "vert") {
-        return hg::getTexture("ui/vertex_shader");
+        return hg::getTexture("textures/ui/vertex_shader");
     } else if (assetType == "hg") {
-        return hg::getTexture("ui/hg");
+        return hg::getTexture("textures/ui/hg");
     } else if (assetType == "hg_pfb") {
-        return hg::getTexture("ui/prefab");
+        return hg::getTexture("textures/ui/prefab");
     }
 
-    return hg::getTexture("ui/unknown");
+    return hg::getTexture("textures/ui/unknown");
 }
 
 void AssetBrowser::contextMenu(hg::utils::FileParts fileParts) {

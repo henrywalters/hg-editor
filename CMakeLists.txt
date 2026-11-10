@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.24)
 set(CMAKE_CXX_STANDARD 20)
 project(HGEditor)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(-g -O0)
+endif()
+
 set(CMAKE_REQUIRED_LIBRARIES "-L${atomic_lib_dir}" "-latomic")
 
 find_package(PkgConfig REQUIRED)
@@ -58,7 +62,8 @@ add_library("imgui" STATIC ${IMGUI_GLOB})
 target_include_directories("imgui" PRIVATE ${IMGUI_PATH})
 target_link_libraries("imgui" PRIVATE glfw)
 
-set(IMGUIZMO_SRC ${IMGUIZMO_PATH}/ImGuizmo.cpp )
+set(IMGUIZMO_SRC ${IMGUIZMO_PATH}/ImGuizmo.cpp
+        include/hge/components/dragTarget.h)
 
 # Add ImGuizmo to your project
 add_library(imguizmo STATIC ${IMGUIZMO_SRC})
@@ -68,7 +73,24 @@ target_include_directories(imguizmo PUBLIC
 )
 target_link_libraries(imguizmo PUBLIC imgui)
 
-add_library(hge STATIC impl/events.cpp include/hge/components/componentExplorer.h impl/componentExplorer.cpp include/hge/components/entityViewer.h impl/entityViewer.cpp include/hge/components/entityTree.h impl/entityTree.cpp include/hge/components/assetBrowser.h impl/assetBrowser.cpp include/hge.h include/hge/editor.h impl/editor.cpp include/hge/core/tool.h impl/fileBrowser.cpp include/hge/components/fileBrowser.h include/hge/core/extensions.h include/hge/widgets/enumField.h include/hge/components/textureEditor.h include/hge/components/gizmo.h impl/gizmo.cpp include/hge/widgets/textureField.h)
+file(GLOB_RECURSE HGE_SOURCES CONFIGURE_DEPENDS "impl/*.cpp" "include/*.h")
+
+MESSAGE(${HGE_SOURCES})
+
+add_library(hge STATIC ${HGE_SOURCES}
+        impl/camera.cpp)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_target_properties(hge PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/lib-debug"
+    )
+    MESSAGE("hge: outputting to lib-debug")
+else()
+    set_target_properties(hge PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/lib"
+    )
+endif()
+
 target_include_directories(hge PUBLIC include/)
 target_include_directories(hge PUBLIC impl/)
 target_include_directories(hge PUBLIC ${HAGAME2_INCLUDE_DIR})
@@ -76,6 +98,7 @@ target_include_directories(hge PUBLIC ${IMGUI_PATH})
 target_include_directories(hge PUBLIC ${IMGUIZMO_PATH})
 target_include_directories(hge PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/glad/include/)
 target_include_directories(hge PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/ImGuizmo)
+target_include_directories(hge PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/json/include)
 
 target_link_libraries(hge ${HAGAME2_LIBRARY})
 target_link_libraries(hge imgui)
@@ -84,7 +107,11 @@ target_link_libraries(hge ${GLFW_LIBRARIES})
 
 include_directories(${X11_INCLUDE_DIR})
 
-add_executable(HGEditor main.cpp src/constants.h src/game.h src/game.cpp src/scenes/mainMenu.h src/scenes/mainMenu.cpp src/common/actionMap.h src/common/gameState.cpp src/common/persistentSettings.cpp src/common/ui.cpp src/common/enums/debugLevel.h include/hge/core/events.h impl/events.cpp src/scenes/runtime.h src/scenes/runtime.cpp src/systems/renderer.cpp src/systems/renderer.cpp)
+file(GLOB_RECURSE HGEditor_SOURCES CONFIGURE_DEPENDS "src/*.cpp" "src/*.h")
+
+MESSAGE(${HGEditor_SOURCES})
+
+add_executable(HGEditor ${HGEditor_SOURCES})
 target_include_directories(HGEditor PUBLIC ${HAGAME2_INCLUDE_DIR})
 target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/asio/asio/include/)
 target_include_directories(HGEditor PUBLIC ${FIND_HAGAME2_PATHS}/thirdparty/glad/include/)

@@ -87,6 +87,8 @@ private:
     void uiPass(double dt);
     void combinedPass(double dt);
 
+    bool mouseInViewport() const;
+
 };
 
 

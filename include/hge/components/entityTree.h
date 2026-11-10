@@ -5,6 +5,7 @@
 #ifndef HGEDITOR_ENTITYTREE_H
 #define HGEDITOR_ENTITYTREE_H
 
+#include <functional>
 #include <imgui.h>
 #include "../core/events.h"
 #include <hagame/core/scene.h>
@@ -22,6 +23,9 @@ namespace hge {
                 renderTree(scene, static_cast<hg::Entity *>(entity), true);
             }
         }
+
+        // Called when an entity is clicked in the tree (not when it's picked in the viewport), e.g. to focus on it
+        std::function<void(hg::Entity*)> onTreeClick;
 
         hg::Entity* selected() { return m_selected; }
         void selected(hg::Entity* entity) {
@@ -50,6 +54,9 @@ namespace hge {
             if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
                 m_selected = entity;
                 Events()->emit(EventTypes::SelectEntity, Event{EntityEvent{entity, nullptr}});
+                if (onTreeClick) {
+                    onTreeClick(entity);
+                }
             }
             if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
                 ImGui::OpenPopup(std::to_string(entity->id()).c_str());

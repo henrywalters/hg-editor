@@ -11,6 +11,7 @@
 #include <hagame/physics/physics2D.h>
 #include <hagame/physics/rigidbody2D.h>
 #include <hagame/core/game.h>
+#include <hagame/common/components/tilemap.h>
 #include "../scenes/runtime.h"
 
 #include "../constants.h"
@@ -38,6 +39,9 @@ Renderer::Renderer(hg::graphics::Window *window):
 
 void Renderer::onInit() {
 
+    auto editor = static_cast<Runtime*>(scene)->editor();
+    editor->orthographicCamera.size = GAME_SIZE.cast<float>();
+
     hg::setMissingTexture(hg::ASSET_DIR + "textures/missing.png");
 
     glViewport(0, 0, GAME_SIZE[0], GAME_SIZE[1]);
@@ -60,7 +64,7 @@ void Renderer::onInit() {
 
     glGenFramebuffers(1, &m_depthFBO);
 
-    auto colorShader = getShader("color");
+    auto colorShader = getShader(COLOR_SHADER.name);
     auto textShader = getShader(TEXT_SHADER.name);
     auto font = getFont("8bit");
 
@@ -71,30 +75,64 @@ void Renderer::onBeforeUpdate() {
 
     auto state = GameState::Get();
 
+    auto editor = static_cast<Runtime*>(scene)->editor();
+
     m_batchRenderer.quads.clear();
     m_batchRenderer.sprites.clear();
 
-    scene->entities.forEach<PerspectiveCamera>([&](hg::graphics::PerspectiveCamera* cam, hg::Entity* entity) {
-        view = cam->view();
-        projection = cam->projection();
-        camPos = entity->position();
+    if (state->running) {
+        scene->entities.forEach<PerspectiveCamera>([&](hg::graphics::PerspectiveCamera* cam, hg::Entity* entity) {
+            view = cam->view();
+            projection = cam->projection();
+            camPos = entity->position();
 
-        state->hasCamera = true;
-    });
+            state->hasCamera = true;
+        });
 
-    scene->entities.forEach<OrthographicCamera>([&](hg::graphics::OrthographicCamera* cam, hg::Entity* entity) {
-        state->mousePos = cam->getGamePos(state->rawMousePos / 100);
-        // state->mousePos[1] *= -1;
-        view = cam->view();
-        projection = cam->projection();
-        camPos = entity->position();
-        state->hasCamera = true;
-    });
+        scene->entities.forEach<OrthographicCamera>([&](hg::graphics::OrthographicCamera* cam, hg::Entity* entity) {
+            state->mousePos = cam->getGamePos(state->rawMousePos);
+            // state->mousePos[1] *= -1;
+            view = cam->view();
+            projection = cam->projection();
+            camPos = entity->position();
+            state->hasCamera = true;
+        });
+    } else {
+        if (editor->cameraMode == hge::CameraMode::Orthographic) {
+            view = editor->orthographicCamera.view();
+            projection = editor->orthographicCamera.projection();
+        } else {
+            view = editor->perspectiveCamera.view();
+            projection = editor->perspectiveCamera.projection();
+        }
+    }
 }
 
 void Renderer::onRender(double dt) {
 
     auto state = GameState::Get();
+    auto editor = ((Runtime*)scene)->editor();
+    if (mouseInViewport()) {
+        if (state->running) {
+            scene->entities.forEach<OrthographicZoom>([&](OrthographicZoom* zoom, auto entity) {
+                zoom->update(m_window->input.devices.keyboardMouse()->axes[input::devices::MouseAxes::WheelY] * -1, state->mousePos, dt);
+            });
+
+            scene->entities.forEach<OrthographicPan>([&](OrthographicPan* pan, auto entity) {
+                pan->update(m_window->input.devices.keyboardMouse()->buttons[input::devices::MouseButtons::Middle], state->rawMousePos);
+            });
+        } else {
+            if (editor->cameraMode == hge::CameraMode::Orthographic) {
+                editor->orthographicCamera.update(
+                    m_window->input.devices.keyboardMouse()->axes[input::devices::MouseAxes::WheelY] * -1,
+                    m_window->input.devices.keyboardMouse()->buttons[input::devices::MouseButtons::Middle],
+                    state->rawMousePos,
+                    dt);
+            } else {
+
+            }
+        }
+    }
 
     Profiler::Start("Renderer::onRender");
 
@@ -118,7 +156,7 @@ void Renderer::onRender(double dt) {
     shader->setMat4("projection", Mat4::Orthographic(0, GAME_SIZE[0], 0, GAME_SIZE[1], -100, 100));
     shader->setMat4("view", Mat4::Identity());
 
-    shader = getShader("color");
+    shader = getShader(COLOR_SHADER.name);
     shader->use();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
@@ -146,7 +184,7 @@ void Renderer::onUpdate(double dt) {
 
     auto state = GameState::Get();
 
-    scene->entities.forEach<components::SpriteSheetAnimator>([&](auto animator, auto entity) {
+    scene->entities.forEach<hg::graphics::components::SpriteSheetAnimator>([&](auto animator, auto entity) {
         animator->update(dt);
     });
 }
@@ -158,6 +196,47 @@ void Renderer::prepareGeometry() {
     scene->entities.forEach<Quad>([&](auto quad, Entity* entity) {
         auto pos = entity->position();
         m_batchRenderer.quads.batch(entity, quad);
+    });
+
+    scene->entities.forEach<hg::components::Tilemap>([&](hg::components::Tilemap* tilemap, Entity* entity) {
+        for (const auto& layer : tilemap->layers) {
+            std::visit(hg::utils::overloaded{
+                [&](hg::components::ColorTile const& tile) {
+                    layer.map.forEach([&](Vec2i idx) {
+                        m_batchRenderer.quads.batch(
+                            tilemap->tileSize,
+                            tilemap->tileSize * 0.5,
+                            tile.color,
+                            Mat4::Translation(tilemap->getPos(idx).resize<3>() + entity->transform.position)
+                        );
+                    });
+                },
+                [&](hg::components::SpriteTile const& tile) {
+                    layer.map.forEach([&](Vec2i idx) {
+                        m_batchRenderer.sprites.batch(
+                            tile.texture,
+                            tilemap->tileSize,
+                            tilemap->tileSize * 0.5, Color::white(),
+                            Mat4::Translation(tilemap->getPos(idx).resize<3>() + entity->transform.position)
+                        );
+                    });
+                },
+                [&](hg::components::SpriteSheetTile const& tile) {
+                    auto sheet = getSpriteSheet(tile.sheet);
+                    layer.map.forEach([&](Vec2i idx) {
+                        m_batchRenderer.sprites.batch(
+                             sheet->texture()->image->path,
+                             tilemap->tileSize,
+                             tilemap->tileSize * 0.5,
+                             sheet->atlas.getRect(tile.index, sheet->texture()->image->size),
+                             Color::white(),
+                             Mat4::Translation(tilemap->getPos(idx).resize<3>() + entity->transform.position)
+                         );
+                    });
+                }
+            }, layer.tile.details);
+        }
+
     });
 
     scene->entities.forEach<Sprite>([&](auto sprite, Entity* entity) {
@@ -173,17 +252,40 @@ void Renderer::prepareGeometry() {
             );
         } else {
             m_geometry.push_back(Renderable{[&, sprite, entity](auto shader) {
+                if (!sprite->texture.asset()) return;
                 auto position = entity->position();
                 m_animQuad.setSizeAndOffset(sprite->size, sprite->offset);
                 m_anim.update(&m_animQuad);
                 //auto shader = getShader(TEXTURE_SHADER.name);
-                sprite->texture.texture()->bind();
+                sprite->texture.asset()->bind();
                 shader->use();
                 shader->setMat4("projection", projection);
                 shader->setMat4("view", view);
                 shader->setMat4("model", entity->model());
+                m_anim.render();
             }});
         }
+    });
+
+    scene->entities.forEach<hg::graphics::components::SpriteSheetAnimator>([&](auto animator, auto entity) {
+        m_geometry.push_back(Renderable{[&, animator, entity](auto shader) {
+            auto sheet = animator->sprites.asset();
+            if (!sheet) return;
+            if (!sheet->sprites->hasSprite(animator->activeSprite)) return;
+            sheet->texture()->bind();
+            shader->use();
+            auto sprite = sheet->sprites->getSprite(animator->activeSprite);
+            auto rect = animator->drawRect();
+            auto position = entity->position();
+            m_animQuad.setSizeAndOffset(animator->size, animator->drawOffset());
+            m_animQuad.texSize(rect.size);
+            m_animQuad.texOffset(rect.pos);
+            m_anim.update(&m_animQuad);
+            shader->setMat4("projection", projection);
+            shader->setMat4("view", view);
+            shader->setMat4("model", entity->model());
+            m_anim.render();
+        }});
     });
     
     auto shader = getShader(BATCH_COLOR_SHADER.name);
@@ -195,7 +297,11 @@ void Renderer::prepareGeometry() {
 
     shader = getShader(BATCH_TEXTURE_SHADER.name);
     shader->use();
-    for (int i = 0; i < 10; ++i) {
+
+    GLint maxTextureUnits = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+
+    for (int i = 0; i < maxTextureUnits; ++i) {
         std::string uniformName = "images[" + std::to_string(i) + "]";
         glUniform1i(glGetUniformLocation(shader->id, uniformName.c_str()), i);
     }
@@ -203,22 +309,11 @@ void Renderer::prepareGeometry() {
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
 
+    auto textures = m_batchRenderer.sprites.m_textures;
+
     m_batchRenderer.sprites.render();
 
-    scene->entities.forEach<components::SpriteSheetAnimator>([&](auto animator, auto entity) {
-        auto animation = (SpriteSheet*) animator->player->get();
-        if (animation) {
-            animation->texture()->bind();
-            shader->setMat4("model", entity->model());
-            auto rect = animation->getRect();
-            m_animQuad.size(animator->size);
-            m_animQuad.offset(animator->offset);
-            m_animQuad.texSize(rect.size);
-            m_animQuad.texOffset(rect.pos);
-            m_anim.update(&m_animQuad);
-            m_anim.render();
-        }
-    });
+
 }
 
 void Renderer::colorPass(double dt) {
@@ -227,7 +322,7 @@ void Renderer::colorPass(double dt) {
 
     // glEnable(GL_DEPTH_TEST);
 
-    auto shader = getShader("geometry");
+    auto shader = getShader(TEXTURE_SHADER.name);
     shader->use();
 
     shader->setMat4("projection", projection);
@@ -261,7 +356,7 @@ void Renderer::lightPass(double dt) {
 
     glViewport(0, 0, GAME_SIZE[0], GAME_SIZE[1]);
 
-    auto shader = getShader("lighting");
+    auto shader = getShader("shaders/lighting");
     shader->use();
 
     shader->setFloat("useLighting", 0);
@@ -321,14 +416,6 @@ void Renderer::debugPass(double dt) {
     m_renderPasses.bind(RenderMode::Debug);
     glViewport(0, 0, GAME_SIZE[0], GAME_SIZE[1]);
 
-//    ((Runtime*)scene)->editor()->render(
-//        m_window->input.devices.keyboardMouse()->mousePosition(),
-//        true,
-//        hg::Recti(hg::Vec2i::Zero(), m_window->size()),
-//        projection,
-//        view
-//    );
-
     scene->entities.forEach<RectCollider>([&](RectCollider *coll, Entity *entity) {
         Debug::DrawRect(coll->getRect(), Color::blue(), 1.0 / 100);
     });
@@ -339,7 +426,15 @@ void Renderer::debugPass(double dt) {
                           1.0 / 100);
     });
 
-    auto shader = getShader("color");
+    auto editor = ((Runtime*)scene)->editor();
+
+    for (const auto& tool : editor->m_tools) {
+        if (tool->is_open()) {
+            tool->renderOverlay(projection, view);
+        }
+    }
+
+    auto shader = getShader(COLOR_SHADER.name);
     shader->use();
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
@@ -367,7 +462,7 @@ void Renderer::combinedPass(double dt) {
     // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, GAME_SIZE[0], GAME_SIZE[1]);
 
-    auto shader = getShader("combined");
+    auto shader = getShader("shaders/combined");
     shader->use();
 //
 //    shader->setInt("colorTex", 0);
@@ -446,11 +541,13 @@ void Renderer::combinedPass(double dt) {
 
 void Renderer::renderTile(hg::Vec2i index, hg::Vec3 position) {
     auto sheet = getSpriteSheet("tilesheet");
-    auto texture = getTexture("tilesheet");
+    auto texture = getTexture("textures/tilesheet");
     Rect rect = sheet->atlas.getRect(index, texture->image->size);
     Mat4 model = Mat4::Translation(position);
     m_batchRenderer.sprites.batch("tilesheet", Vec2(1.), Vec2::Identity(), rect, Color::white(), model);
 }
 
-
-
+bool Renderer::mouseInViewport() const {
+    auto pos = GameState::Get()->rawMousePos;
+    return pos[0] >= 0 && pos[1] >= 0 && pos[0] < GAME_SIZE[0] && pos[1] < GAME_SIZE[1];
+}

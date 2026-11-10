@@ -12,11 +12,16 @@
 #include <hagame/utils/string.h>
 
 namespace hge {
+
+    inline std::string getTextureName(std::string const& path) {
+        return hg::utils::s_replace(hg::utils::s_replace(path, hg::ASSET_DIR, ""), ".png", "");
+    }
+
     inline void textureField(std::string label, hg::graphics::TextureAsset& asset) {
         if (ImGui::BeginCombo(label.c_str(), asset.path().c_str())) {
             for (const auto& path : hg::utils::d_listFiles(hg::ASSET_DIR + "textures", true)) {
-                auto trimmed = hg::utils::s_replace(hg::utils::s_replace(path, hg::ASSET_DIR + "textures/", ""), ".png", "");
-                bool selected = trimmed == asset.path();
+                auto trimmed = getTextureName(path);
+                bool selected = trimmed == getTextureName(asset.path());
                 if (ImGui::Selectable(trimmed.c_str(), selected)) {
                     asset.path(trimmed);
                     break;
@@ -27,7 +32,7 @@ namespace hge {
             }
             ImGui::EndCombo();
         }
-        ImGui::Image(asset.texture()->id, ImVec2(64, 64));
+        ImGui::Image(asset.asset()->id, ImVec2(64, 64));
     }
 }
 

@@ -5,6 +5,8 @@
 #include "hge/core/events.h"
 #include "hge/widgets/enumField.h"
 #include "hge/components/entityViewer.h"
+#include "hge/tools/tilemapEditor.h"
+#include "hge/tools/spriteSheetEditor.h"
 #include "imgui.h"
 #include "../common/gameState.h"
 #include "../systems/renderer.h"
@@ -19,6 +21,9 @@ void Runtime::onInit() {
     auto state = GameState::Get();
 
     addSystem<Renderer>(m_window);
+
+    m_editor.registerTool<hge::TilemapEditor>(this);
+    m_editor.registerTool<hge::SpriteSheetEditor>(this);
 
     m_editor.onNewScene = [&, state](){
         game()->scenes()->active()->clear();
@@ -45,8 +50,7 @@ void Runtime::onUpdate(double dt) {
     auto renderer = getSystem<Renderer>();
 
     m_editor.render(
-            m_window->input.devices.keyboardMouse()->mousePosition(),
-            true,
+            &m_window->input,
             hg::Recti(hg::Vec2i::Zero(), renderer->m_window->size()),
             renderer->projection,
             renderer->view

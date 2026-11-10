@@ -12,6 +12,14 @@
 using namespace hge;
 using namespace hg::math;
 
+struct EulerCacheEntry {
+    Transform* transform = nullptr;
+    hg::Vec3 euler;
+    hg::math::Quaternion<float> lastQuat; // quaternion the euler was derived from/produced
+};
+
+static EulerCacheEntry s_eulerCache;
+
 void hge::transformViewer(Transform &transform) {
     if (!ImGui::BeginTable("Transform", 4, ImGuiTableFlags_NoPadInnerX | ImGuiTableFlags_NoPadOuterX)) {
         return;
@@ -76,43 +84,55 @@ void hge::transformViewer(Transform &transform) {
 
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
-    ImGui::Text("Rot: %s", transform.rotation.toString().c_str());
 
-//    auto eulerAngles = transform.rotation.normalized().eulerAngles();
-//
-//    for (int i = 0; i < 3; i++) {
-//        eulerAngles[i] *= hg::math::RAD2DEG;
-//    }
-//
-//    ImGui::PushID(6);
-//    ImGui::TableSetColumnIndex(1);
-//    input([&]() {
-//        ImGui::DragFloat("##Roll", &eulerAngles[0], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
-//    }, 0);
-//    ImGui::PopID();
-//
-//    ImGui::PushID(7);
-//    ImGui::TableSetColumnIndex(2);
-//    input([&]() {
-//        ImGui::DragFloat("##Pitch", &eulerAngles[1], 0.1,-90 + hg::math::EPSILON, 90 - hg::math::EPSILON);
-//    }, 1);
-//    ImGui::PopID();
-//
-//    ImGui::PushID(8);
-//    ImGui::TableSetColumnIndex(3);
-//    input([&]() {
-//        ImGui::DragFloat("##Yaw", &eulerAngles[2], 0.1, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
-//    }, 2);
-//    ImGui::PopID();
-//
-//    for (int i = 0; i < 3; i++) {
-//        eulerAngles[i] *= hg::math::DEG2RAD;
-//    }
-//
-//    transform.rotation = hg::math::Quaternion<float>(eulerAngles);
+    bool isSameTransform = (s_eulerCache.transform == &transform);
+    bool externallyChanged = isSameTransform &&
+        !s_eulerCache.lastQuat.approxEqual(transform.rotation, hg::math::EPSILON);
+
+    if (!isSameTransform || externallyChanged) {
+        // New entity selected, OR something outside this widget changed
+        // the rotation since we last touched it — resync from the live quaternion.
+        auto euler = transform.rotation.normalized().eulerAngles();
+        for (int i = 0; i < 3; i++) euler[i] *= hg::math::RAD2DEG;
+        s_eulerCache.transform = &transform;
+        s_eulerCache.euler = euler;
+        s_eulerCache.lastQuat = transform.rotation;
+    }
+
+    hg::Vec3& eulerAngles = s_eulerCache.euler;
+    bool changed = false;
+
+    ImGui::PushID(6);
+    ImGui::TableSetColumnIndex(0);
+    ImGui::Text("Rot");
+    ImGui::TableSetColumnIndex(1);
+    input([&]() {
+        changed |= ImGui::DragFloat("##Roll", &eulerAngles[0], 0.1f, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
+    }, 0);
+    ImGui::PopID();
+
+    ImGui::PushID(7);
+    ImGui::TableSetColumnIndex(2);
+    input([&]() {
+        changed |= ImGui::DragFloat("##Pitch", &eulerAngles[1], 0.1f, -90 + hg::math::EPSILON, 90 - hg::math::EPSILON);
+    }, 1);
+    ImGui::PopID();
+
+    ImGui::PushID(8);
+    ImGui::TableSetColumnIndex(3);
+    input([&]() {
+        changed |= ImGui::DragFloat("##Yaw", &eulerAngles[2], 0.1f, -180 + hg::math::EPSILON, 180 - hg::math::EPSILON);
+    }, 2);
+    ImGui::PopID();
+
+    if (changed) {
+        hg::Vec3 radians = eulerAngles;
+        for (int i = 0; i < 3; i++) radians[i] *= hg::math::DEG2RAD;
+        transform.rotation = hg::math::Quaternion<float>(radians);
+        s_eulerCache.lastQuat = transform.rotation; // keep cache in sync with what we just wrote
+    }
 
     ImGui::PopStyleVar();
-
     ImGui::EndTable();
 }
 

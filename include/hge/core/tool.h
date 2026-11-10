@@ -8,6 +8,7 @@
 #include <hagame/core/object.h>
 #include <hagame/core/scene.h>
 #include <hge/components/entityTree.h>
+#include <hagame/input/input.h>
 
 namespace hge {
 
@@ -21,11 +22,9 @@ namespace hge {
             onInit();
         }
 
-        void update(hg::Vec2 mousePos, double dt) {
-            m_mousePos = mousePos;
+        void update(hg::input::Input* input, double dt) {
             if (m_open) {
-
-                onUpdate(dt);
+                onUpdate(input, dt);
             }
         }
 
@@ -34,11 +33,15 @@ namespace hge {
                 ImGui::Begin(getButtonLabel().c_str(), &m_open);
                 renderUI(dt);
                 ImGui::End();
-                renderOverlay();
             }
         }
 
+        bool is_open() {
+            return m_open;
+        }
+
         void open() {
+            onOpen();
             m_open = true;
         }
 
@@ -50,6 +53,17 @@ namespace hge {
 
         virtual std::string getName() = 0;
 
+        virtual void renderOverlay(hg::Mat4 projection, hg::Mat4 view) {};
+
+        // Set by the editor each frame, before update
+        void setMouse(hg::Vec2 worldPos, bool overViewport) {
+            m_mousePos = worldPos;
+            m_mouseOverViewport = overViewport;
+        }
+
+        // While true the editor doesn't pick entities from viewport clicks, so the tool can use them
+        virtual bool capturesViewportClicks() { return false; }
+
     protected:
         OBJECT_NAME(Tool)
 
@@ -57,15 +71,18 @@ namespace hge {
 
         bool m_open = false;
 
+        // The mouse in world space, under the camera the viewport was drawn with
         hg::Vec2 m_mousePos;
+        // Whether the mouse is over the scene image, rather than another window
+        bool m_mouseOverViewport = false;
 
         virtual void onInit() {}
 
-        virtual void onUpdate(double dt) {};
+        virtual void onUpdate(hg::input::Input* input, double dt) {};
 
         virtual void renderUI(double dt) {};
 
-        virtual void renderOverlay() {};
+        virtual void onOpen() {};
     };
 
     template <typename T>
